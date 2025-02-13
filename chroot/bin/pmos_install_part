@@ -1,0 +1,15 @@
+#!/bin/busybox ash
+# shellcheck shell=sh
+# Copyright 2017 Attila Szollosi, Oliver Smith
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# shellcheck source=pmos_install_functions
+. /bin/pmos_install_functions
+extract_partition_table >/dev/null
+
+# This script runs inside the chroot and prints the install partition to stdout.
+# So we can umount it outside of the chroot in pmos_chroot (pmaports#1654).
+if [ -n "$(awk '$1 == install_part' install_part="$INSTALL_DEVICE" /proc/mounts)" ]; then
+	echo "$INSTALL_DEVICE"
+fi
+
